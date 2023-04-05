@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.adv160420068week4.R
 import com.example.adv160420068week4.viewModel.ListViewModel
 
@@ -29,16 +30,28 @@ class StudentListFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_student_list, container, false)
-
+        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?){
+        super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
         viewModel.refresh()
-
         val recView = view?.findViewById<RecyclerView>(R.id.recView)
         recView?.layoutManager = LinearLayoutManager(context)
         recView?.adapter = studentListAdapter
 
         observeViewModel()
 
+        val refreshLayout = view?.findViewById<SwipeRefreshLayout>(R.id.refreshLayout)
+        val txtError = view?.findViewById<TextView>(R.id.txtError)
+        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBar)
+
+        refreshLayout?.setOnRefreshListener {
+             recView?.visibility = View.GONE
+             txtError?.visibility = View.GONE
+             progressBar?.visibility = View.VISIBLE
+             viewModel.refresh()
+             refreshLayout.isRefreshing = false
+        }
     }
 
     private fun observeViewModel() {
