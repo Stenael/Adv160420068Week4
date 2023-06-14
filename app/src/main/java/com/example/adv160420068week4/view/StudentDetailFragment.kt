@@ -6,9 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.adv160420068week4.R
+import com.example.adv160420068week4.databinding.FragmentStudentDetailBinding
+import com.example.adv160420068week4.databinding.StudentListItemBinding
 import com.example.adv160420068week4.viewModel.DetailViewModel
 import com.google.android.material.textfield.TextInputEditText
 import com.squareup.picasso.Picasso
@@ -16,12 +19,14 @@ import com.squareup.picasso.Picasso
 class StudentDetailFragment : Fragment() {
 
     private lateinit var viewModel:DetailViewModel
+    private lateinit var dataBinding:FragmentStudentDetailBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_student_detail, container, false)
+        dataBinding = DataBindingUtil.inflate<FragmentStudentDetailBinding>(inflater,R.layout.fragment_student_detail, container, false)
+        return dataBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,19 +42,22 @@ class StudentDetailFragment : Fragment() {
         observeViewModel()
     }
     fun observeViewModel(){
-        val id = view?.findViewById<TextInputEditText>(R.id.txtID)
-        val name = view?.findViewById<TextInputEditText>(R.id.txtName)
-        val BOD = view?.findViewById<TextInputEditText>(R.id.txBod)
-        val phone = view?.findViewById<TextInputEditText>(R.id.txtPhone)
-        val photoUrl = view?.findViewById<ImageView>(R.id.imageView2)
-
         viewModel.studentLD.observe(viewLifecycleOwner, Observer {
-            id?.setText(viewModel.studentLD.value?.id)
-            name?.setText(viewModel.studentLD.value?.name)
-            BOD?.setText(viewModel.studentLD.value?.bod)
-            phone?.setText(viewModel.studentLD.value?.phone)
-            photoUrl?.loadImage(viewModel.studentLD.value?.photoUrl)
+            dataBinding.student = it
         })
+//        val id = view?.findViewById<TextInputEditText>(R.id.txtID)
+//        val name = view?.findViewById<TextInputEditText>(R.id.txtName)
+//        val BOD = view?.findViewById<TextInputEditText>(R.id.txBod)
+//        val phone = view?.findViewById<TextInputEditText>(R.id.txtPhone)
+//        val photoUrl = view?.findViewById<ImageView>(R.id.imageView2)
+//
+//        viewModel.studentLD.observe(viewLifecycleOwner, Observer {
+//            id?.setText(viewModel.studentLD.value?.id)
+//            name?.setText(viewModel.studentLD.value?.name)
+//            BOD?.setText(viewModel.studentLD.value?.bod)
+//            phone?.setText(viewModel.studentLD.value?.phone)
+//            photoUrl?.loadImage(viewModel.studentLD.value?.photoUrl)
+//        })
     }
 
 
